@@ -1,0 +1,127 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<parent>
+		<artifactId>cogroo</artifactId>
+		<groupId>org.cogroo</groupId>
+		<version>4.0.0-SNAPSHOT</version>
+		<relativePath>..</relativePath>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>cogroo-dict</artifactId>
+	<packaging>pom</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>cogroo-nlp</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>create target dir</id>
+						<phase>initialize</phase>
+						<configuration>
+							<tasks>
+								<mkdir dir="${project.build.directory}/contractionRes" />
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- <plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>create jspell dict</id>
+						<phase>compile</phase>
+						<configuration>
+							<tasks>
+								<exec executable="perl" dir="jspell/scripts">
+						            <arg value="create_dictionaries.pl"/>
+          						</exec>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin> -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.1.1</version>
+				<executions>
+					<execution>
+						<id>abbr</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>java</goal>
+						</goals>
+						<configuration>
+							<mainClass>opennlp.tools.cmdline.CLI</mainClass>
+							<arguments>
+								<argument>DictionaryBuilder</argument>
+								<argument>-inputFile</argument>
+								<argument>${project.basedir}/abbr/pt-br/abbr.txt</argument>
+								<argument>-outputFile</argument>
+								<argument>${project.build.directory}/abbr.xml</argument>
+								<argument>-encoding</argument>
+								<argument>UTF-8</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>cont</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>java</goal>
+						</goals>
+						<configuration>
+							<mainClass>org.cogroo.cmdline.CLI</mainClass>
+							<arguments>
+								<argument>AbbreviationDictionaryBuilder</argument>
+								<argument>-outputFile</argument>
+								<argument>${project.build.directory}/contractionRes/cont.dictionary</argument>
+							</arguments>
+						</configuration>
+					</execution>
+<!-- 					<execution> -->
+<!-- 						<id>pos</id> -->
+<!-- 						<phase>compile</phase> -->
+<!-- 						<goals> -->
+<!-- 							<goal>java</goal> -->
+<!-- 						</goals> -->
+<!-- 						<configuration> -->
+<!-- 							<mainClass>br.ccsl.cogroo.cmdline.CLI</mainClass> -->
+<!-- 							<arguments> -->
+<!-- 								<argument>POSDictionaryBuilder</argument> -->
+<!-- 								<argument>-inputFile</argument> -->
+<!-- 								<argument>${project.build.directory}/tagdict.txt</argument> -->
+<!-- 								<argument>-outputFile</argument> -->
+<!-- 								<argument>${project.build.directory}/tagdict.xml</argument> -->
+<!-- 								<argument>-allowInvalidFeats</argument> -->
+<!-- 								<argument>true</argument> -->
+<!-- 								<argument>-corpus</argument> -->
+<!-- 								<argument>${env.CORPUS_ROOT}/Bosque/Bosque_CF_8.0.ad.txt</argument> -->
+<!-- 								<argument>-encoding</argument> -->
+<!-- 								<argument>UTF-8</argument> -->
+<!-- 							</arguments> -->
+<!-- 						</configuration> -->
+<!-- 					</execution> -->
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

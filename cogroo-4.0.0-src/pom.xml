@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+	license agreements. See the NOTICE file distributed with this work for additional 
+	information regarding copyright ownership. The ASF licenses this file to 
+	you under the Apache License, Version 2.0 (the "License"); you may not use 
+	this file except in compliance with the License. You may obtain a copy of 
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License. -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.cogroo</groupId>
+	<artifactId>cogroo</artifactId>
+	<version>4.0.0</version>
+	<packaging>pom</packaging>
+
+	<name>Cogroo Parent</name>
+	<description>CoGrOO Aggregator</description>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<github.global.server>github</github.global.server>
+	</properties>
+
+	<prerequisites>
+		<maven>3.0</maven>
+	</prerequisites>
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+
+	<issueManagement>
+		<system>redmine</system>
+		<url>http://ccsl.ime.usp.br/redmine/projects/cogroo</url>
+	</issueManagement>
+
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<modules>
+		<module>cogroo-nlp</module>
+		<module>cogroo-ann</module>
+		<module>cogroo-gc</module>
+		<module>lang</module>
+		<module>cogroo-distr</module>
+<!--  		<module>cogroo-eval</module> -->
+	</modules>
+
+	<scm>
+		<connection>scm:git:git@github.com:cogroo/cogroo4.git</connection>
+		<url>scm:git:git@github.com:cogroo/cogroo4.git</url>
+		<developerConnection>scm:git:git@github.com:cogroo/cogroo4.git</developerConnection>
+	  <tag>cogroo-4.0.0-rc2</tag>
+  </scm>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.8.1</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh</artifactId>
+				<version>1.0-beta-7</version>
+			</extension>
+		</extensions>
+		<plugins>
+	        <plugin>
+	            <groupId>com.mycila.maven-license-plugin</groupId>
+	            <artifactId>maven-license-plugin</artifactId>
+	            <configuration>
+	                <header>src/etc/license/header.txt</header>
+	                <strictCheck>true</strictCheck>
+	                <excludes>
+	                    <exclude>**/description/description_*.txt</exclude>
+	                    <exclude>**/description/licenseAbout.txt</exclude>
+	                    <exclude>**/nbproject/**</exclude>
+	                    <exclude>**/.gitignore</exclude>
+	                    <exclude>**/*.model</exclude>
+	                    <exclude>**/*.dict</exclude>
+	                    <exclude>**/*.README</exclude>
+	                    <exclude>**/*.md</exclude>
+	                    <exclude>**/apache.txt</exclude>
+	                </excludes>
+	                <validHeaders>
+	                	<validHeader>src/etc/license/apache.txt</validHeader>
+	                </validHeaders>
+                <mapping>
+                    <xcu>XML_STYLE</xcu>
+                    <xcs>XML_STYLE</xcs>
+                </mapping>
+	            </configuration>
+<!-- 	            <executions> -->
+<!-- 	                <execution> -->
+<!-- 	                    <goals> -->
+<!-- 	                        <goal>check</goal> -->
+<!-- 	                    </goals> -->
+<!-- 	                </execution> -->
+<!-- 	            </executions> -->
+	        </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<compilerArgument>-Xlint</compilerArgument>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<show>public</show>
+					<quiet>true</quiet>
+					<use>false</use> <!-- Speeds up the build of the javadocs -->
+				</configuration>
+				<executions>
+					<execution>
+						<id>aggregate</id>
+						<goals>
+							<goal>aggregate</goal>
+						</goals>
+						<phase>package</phase>
+						<inherited>false</inherited>
+					</execution>
+					<execution>
+						<id>create-javadoc-jar</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<phase>package</phase>
+					</execution>
+				</executions>
+			</plugin>
+
+
+			<plugin>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>create-source-jar</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<phase>package</phase>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.8</version>
+				<configuration>
+					<workspace>../../</workspace>
+					<workspaceCodeStylesURL>http://incubator.apache.org/opennlp/code-formatter/OpenNLP-Eclipse-Formatter.xml</workspaceCodeStylesURL>
+				</configuration>
+			</plugin>
+
+		</plugins>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.9</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.3.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.jvnet.jaxb2.maven2</groupId>
+					<artifactId>maven-jaxb2-plugin</artifactId>
+					<version>0.7.3</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.12</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>	
+					<artifactId>build-helper-maven-plugin</artifactId>
+					<version>1.7</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>1.2.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>2.1.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.4.1</version>
+					<dependencies>
+						<dependency>
+					      <groupId>org.apache.maven.scm</groupId>
+					      <artifactId>maven-scm-api</artifactId>
+					      <version>1.8.1</version>
+					    </dependency>
+					</dependencies>
+				</plugin>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-antrun-plugin
+										</artifactId>
+										<versionRange>
+											[1.3,)
+										</versionRange>
+										<goals>
+											<goal>run</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.codehaus.mojo
+										</groupId>
+										<artifactId>
+											properties-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.0-alpha-2,)
+										</versionRange>
+										<goals>
+											<goal>
+												read-project-properties
+											</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-dependency-plugin</artifactId>
+										<versionRange>[2.0,)</versionRange>
+										<goals>
+											<goal>copy-dependencies</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-dependency-plugin</artifactId>
+										<versionRange>[2.0,)</versionRange>
+										<goals>
+											<goal>unpack</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<organization>
+		<name>CoGrOO</name>
+		<url>http://cogroo.org</url>
+	</organization>
+	<inceptionYear>2012</inceptionYear>
+	<url>http://cogroo.org</url>
+	
+	<profiles>
+		<profile>
+			<id>release-sign-artifacts</id>
+		    <activation>
+		      <property>
+		        <name>performRelease</name>
+		        <value>true</value>
+		      </property>
+		    </activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.1</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>allow-repositories-if-not-release</id>
+		    <activation>
+		      <property>
+		        <name>!performRelease</name>
+		      </property>
+		    </activation>
+				<repositories>
+					<repository>
+						<id>snapshots.apache.org</id>
+						<name>Apache Snapshot Repository</name>
+						<url>http://repository.apache.org/snapshots</url>
+						<releases>
+							<enabled>false</enabled>
+						</releases>
+						<snapshots>
+							<enabled>true</enabled>
+						</snapshots>
+					</repository>
+				</repositories>
+		</profile>
+	</profiles>
+</project>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="cogroo-ann/src/main/java"/>
+	<classpathentry kind="lib" path="lib/cogroo-addon-pt_br.jar"/>
+	<classpathentry kind="lib" path="lib/cogroo-ann-4.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/cogroo-ann-pt_br-4.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/cogroo-gc-4.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/cogroo-gc-pt_br-4.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/cogroo-nlp-4.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/cogroo-res-pt_br-4.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/commons-cli-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/commons-codec-1.4.jar"/>
+	<classpathentry kind="lib" path="lib/commons-lang-2.6.jar"/>
+	<classpathentry kind="lib" path="lib/guava-13.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/hppc-0.4.1.jar"/>
+	<classpathentry kind="lib" path="lib/jaxb-api-2.2.5.jar"/>
+	<classpathentry kind="lib" path="lib/jwnl-1.3.3.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="lib/morfologik-fsa-1.5.3.jar"/>
+	<classpathentry kind="lib" path="lib/morfologik-polish-1.5.2.jar"/>
+	<classpathentry kind="lib" path="lib/morfologik-stemming-1.5.2.jar"/>
+	<classpathentry kind="lib" path="lib/morfologik-tools-1.5.2.jar"/>
+	<classpathentry kind="lib" path="lib/opennlp-maxent-3.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/opennlp-tools-1.5.3.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
