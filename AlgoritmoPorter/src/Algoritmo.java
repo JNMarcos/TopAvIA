@@ -95,6 +95,7 @@ public class Algoritmo {
 		return particoesTexto;
 	}
 
+	/*Verifica se um caractere é vogal*/
 	public static boolean isVogal(char c){
 		switch(c){
 		case 'A':
@@ -107,6 +108,14 @@ public class Algoritmo {
 			return false;
 		}
 	}
+	
+	/*Verifica se num determinado trecho há ao menos uma vogal. 
+	 *Leva em consideração a regra do "Y Vogal".
+	 *Se aparece um Y na palavra, por si só é suficiente para dizer que tem uma 
+	 *vogal na palavra, pois se há um caractere * antes dele ou é vogal ou é consoante.
+	 *Se * é vogal, há uma vogal na palavra. Se * é consoante, Y é a vogal.
+	 *Se não há caractere antes de Y, então Y é vogal.
+	 */
 	public static boolean temVogal(String txt){
 		boolean ehVogal = false;
 		for (int i = txt.length() - 1; i >= 0  && ehVogal == false; i--){
@@ -116,6 +125,8 @@ public class Algoritmo {
 		return ehVogal;
 	}
 
+	/*Verifica se no stem há a combinação consoante-vogal-consoante.
+	 *Sendo a última consoante diferente de X, Y e W*/
 	public static boolean temCVC(String txt){
 		boolean temCVC = false;
 		if (txt.length() >= 3 && isVogal(txt.charAt(txt.length() - 3)) == false && 
@@ -128,6 +139,9 @@ public class Algoritmo {
 		return temCVC;
 	}
 
+	/*Verifica se o stem tem consoante dupla 
+	 *(rr: duplo erre, ss: duplo esse, zz: duplo zê) no FIM 
+	*/
 	public static boolean temConsoanteDuplaNoFim(String txt){
 		boolean temConsoanteDupla = false;
 
@@ -141,12 +155,14 @@ public class Algoritmo {
 		return temConsoanteDupla;
 	}
 
+	/*Verifica se há [C](VC)^m[C]
+	 * ehMMaiorOuIgual se true, indica que nVezes para ser true 
+	 * deve ser MAIOR que m (m > 1 ou m > 0, p. ex.)
+	 * caso false (= igual), nVezes para ser true deve ser IGUAL a m (m=1)*/
 	public static boolean temVC(String txt, int m, boolean ehMMaiorOuIgual){
-		//ehMMaiorOuIgual se true, indica que nVezes para ser true deve MAIOR que m
-		// caso false (=igual), nVezes para ser true deve ser IGUAL a m
 		boolean temVC = false;
 		int nVezes = 0;
-		if (txt.length() >=2){//se tamanho for menor que 2 já é falso
+		if (txt.length() >= 2){//se tamanho for menor que 2 já é falso
 			if (ehMMaiorOuIgual){//nVezes deve ser maior que m
 				for (int i = txt.length() - 1; i > 0 && nVezes <= m; i--){//vai até o penúltimo índice
 					if (isVogal(txt.charAt(i-1)) == true && 
@@ -163,14 +179,13 @@ public class Algoritmo {
 						nVezes++;
 					} 
 				}
-
 				if (nVezes == m) temVC = true;
 			}
 		}
-
 		return temVC;
 	}
 
+	/*Normaliza o texto*/
 	public static String correcaoTexto(String texto){
 		//remove os sinais de pontuação comuns
 		texto = texto.replace(",","").replace(".","").replace("?", "").replace("!","").replace(";", "")
@@ -182,6 +197,7 @@ public class Algoritmo {
 		return texto;
 	}
 
+	/*Particiona o texto*/
 	public static String[] substringsTexto(String texto){
 		//retorna o texto partido nos espaços
 		return texto.split(" ");
@@ -202,7 +218,7 @@ public class Algoritmo {
 
 	public static String[] regras1B(String[] txt){
 		for (int i = 0; i < txt.length; i++){
-			if (txt[i].endsWith("EED")){//TÁ ERRADO, VER COMO SE FAZ O M>0
+			if (txt[i].endsWith("EED")){
 				if (temVC(txt[i].substring(0, txt[i].length() - 2), 0, true)){
 					txt[i] = txt[i].substring(0,txt[i].length() - 1);
 					txt[i] = correcaoRegras1B(txt[i]);
