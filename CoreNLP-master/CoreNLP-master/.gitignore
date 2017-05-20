@@ -1,0 +1,9 @@
+!classes/.gitignore
+*.pyc
+*.swp
+*.swo
+*.o
+*.so
+.DS_Store
+.settings/**
+/target/
