@@ -2,11 +2,13 @@ package atividade;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import edu.stanford.nlp.ling.CoreAnnotations.LemmaAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation;
 import edu.stanford.nlp.ling.CoreLabel;
@@ -61,10 +63,11 @@ public class AtividadeStanford {
 	//Para evitar demora na execução, basta executar uma função por vez no
 	//pipeline OU
 	//diminua o texto passado para as tarefas (modifique o arquivo sample.txt)
-	//ou procure no começo de cada método pela string text (comentada) 
+	//OU procure no começo de cada método pela variável string 'text' (comentada) 
 	//e ponha seu novo texto pra sobrescrever o que há no arquivo
 	public static void pipeline(String text, String stoplist){
 		tokenizeAndSplitter(text);
+		lemmas(text);
 		ner(text);
 		deTree(text);
 		stemming(text, stoplist);
@@ -82,7 +85,6 @@ public class AtividadeStanford {
 		Annotation document = new Annotation(text);
 		pipeline.annotate(document);
 
-		/*Usado para capturar as sentenças sem estarem particionadas*/
 		System.out.println("-------------SPLITTER--------------");
 		System.out.println("Original Text: " + text);
 		for(CoreMap sentence: document.get(SentencesAnnotation.class)) {
@@ -90,6 +92,28 @@ public class AtividadeStanford {
 			System.out.println("\nWords of Sentence\n");
 			for (CoreLabel cl: sentence.get(TokensAnnotation.class)){
 				System.out.println(cl.originalText());
+			}
+		}
+	}
+	
+	public static void lemmas(String text){
+		//Descomente text caso queira sobrescrever ao que está no arquivo
+		//text = "Albert was born in 1996.";
+		
+		Properties props = new Properties();
+		props.put("annotators", "tokenize, ssplit, pos, lemma");
+		
+		StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
+		
+		Annotation documento = new Annotation(text);
+		pipeline.annotate(documento);
+		
+		System.out.println("\n\n-------------LEMMAS--------------");
+		System.out.println("Original Text: " + text);
+		List<CoreMap> sentences = documento.get(SentencesAnnotation.class);
+		for(CoreMap sentence: sentences){
+			for(CoreLabel token: sentence.get(TokensAnnotation.class)){
+				System.out.println((token.get(LemmaAnnotation.class)));
 			}
 		}
 	}
@@ -134,6 +158,7 @@ public class AtividadeStanford {
 		for(CoreMap sentence: document.get(SentencesAnnotation.class)) {
 			System.out.println("\nSentence: " + sentence.toString());
 
+			//três tipos de árvore de dependência é gerado
 			System.out.println("Basic Dependency: ");
 			System.out.println(sentence.get(BasicDependenciesAnnotation.class));
 
