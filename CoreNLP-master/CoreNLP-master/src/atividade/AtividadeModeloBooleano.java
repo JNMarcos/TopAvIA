@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  * @author JN
  *
  */
-public class ModeloBooleano {
+public class AtividadeModeloBooleano {
 
 	/**
 	 * @param args
@@ -38,8 +38,8 @@ public class ModeloBooleano {
 		String nomeArquivoStopList = "stoplist.txt";
 
 		//consulta a ser realizada
-		//tolerante a maiúscula/minúscula, repetição de termos
-		String consulta = "congratulations Happy";
+		//tolerante a maiúscula/minúscula, repetição de termos e ordem
+		String consulta = "congratulations alan";
 		consulta = consulta.toLowerCase();
 
 		//a cada espaço, a consulta é separada, pois é um novo termo
