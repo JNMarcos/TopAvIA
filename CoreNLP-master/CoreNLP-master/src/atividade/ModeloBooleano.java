@@ -25,6 +25,8 @@ public class ModeloBooleano {
 	static List<String> vocabulario = new ArrayList<>();
 	static Hashtable<Integer, List<String>> vocabularioPorDocumento = new Hashtable<>();
 
+	/*
+	 * O algoritmo é tolerante a maiúscula e minúscula*/
 	public static void main(String[] args) {
 		//separe cada 'documento' por nova linha
 		String nomeArquivo = "sample.txt";
@@ -36,7 +38,9 @@ public class ModeloBooleano {
 		String nomeArquivoStopList = "stoplist.txt";
 
 		//consulta a ser realizada
-		String consulta = "Happy Albert";
+		//tolerante a maiúscula/minúscula, repetição de termos
+		String consulta = "congratulations Happy";
+		consulta = consulta.toLowerCase();
 
 		//a cada espaço, a consulta é separada, pois é um novo termo
 		String[] partesConsulta = consulta.split(" ");
@@ -64,8 +68,8 @@ public class ModeloBooleano {
 		//comente as próximas 3 linhas caso não queira que nada a mais 
 		//ao que há no arquivo seja adicionado
 		documentos.add("Albert was born in 1996."); 
-		documentos.add("Alan Turing is great birthday.");
-		documentos.add("Happy birthday to Alan.");
+		documentos.add("Alan Turing is the father of Computation. Congratulations!");
+		documentos.add("Happy birthday to Alan. Congratulations!");
 
 		f = new File(nomeArquivoStopList);
 		try {
@@ -96,6 +100,7 @@ public class ModeloBooleano {
 			}
 		}
 
+		List<String> v = vocabulario;
 		for (int i = 0; i < vocabulario.size(); i++) {
 			consBinario.add(0);
 		}
@@ -120,12 +125,14 @@ public class ModeloBooleano {
 				docBinario.add(0);
 			}
 			for (int k = 0; k < vocabularioPorDocumento.get(j + 1).size(); k++) {
-				for (int i = 0; i < vocabulario.size(); i++) {
+				kk = vocabulario.indexOf(vocabularioPorDocumento.get(j + 1).get(k));
+				if (kk != -1) docBinario.set(kk, 1);
+				/*for (int i = 0; i < vocabulario.size(); i++) {
 					if (vocabulario.get(i).contains((CharSequence) vocabularioPorDocumento.get(j + 1).get(k))) {
 						docBinario.set(i, 1);
 						break;
 					}
-				}
+				}*/
 			}
 			docIndex.put(j + 1, (ArrayList<Integer>) docBinario);
 		}
@@ -139,8 +146,8 @@ public class ModeloBooleano {
 		System.out.println(consBinario.toString());
 
 		System.out.println("\nRetorno da Consulta");
-		String retConsulta = consulta(consBinario, docIndex);
-		if (retConsulta != ""){
+		List<String> retConsulta = consulta(consBinario, docIndex);
+		if (retConsulta.size() != 0){
 			System.out.println(retConsulta);
 		} else {
 			System.out.println("Nenhum documento encontrado.");
@@ -158,12 +165,14 @@ public class ModeloBooleano {
 			obterVocabularioPorDocumento(documentos.get(i), stoplist, i + 1);
 	}
 
-	public static String consulta (List<Integer> consulta, 
+	public static List<String> consulta (List<Integer> consulta, 
 			Hashtable<Integer, List<Integer>> documentosIdx){
-		String retornoConsulta = "";
+		String retornoDocumento;
+		List<String> retornoConsulta = new ArrayList<>();
 		boolean retornarDoc;
 		for (int i = 0; i < documentosIdx.size(); i++){
 			//de início, todo documento é tratado como retornado
+			retornoDocumento = "";
 			retornarDoc = true;
 			if (documentosIdx.get(i + 1).contains(1)){
 				for (int j = 0; j < consulta.size(); j++){
@@ -176,8 +185,9 @@ public class ModeloBooleano {
 				}
 				
 				if (retornarDoc == true){
-					retornoConsulta += "documento " + (i + 1) + ", "; 
-					retornoConsulta += "texto: \"" + documentos.get(i)+ "\"\n";
+					retornoDocumento += "documento " + (i + 1) + ", "; 
+					retornoDocumento += "texto: \"" + documentos.get(i)+ "\"\n";
+					retornoConsulta.add(retornoDocumento);
 				}
 			}
 		}
@@ -191,11 +201,12 @@ public class ModeloBooleano {
 
 		// faz algumas substituições
 		// pondo um espaço entre os sinais de pontuação e a letra anterior
-		String textoManipulacao = (texto.replace(",", " ,").replace(".", " .").replace("?", " ?").replace("!", " !")
-				.replace(";", " ;").replace("\"", "\" ").replace("/", " / ")
+		String textoManipulacao = texto.replaceAll("//s{2,}", " ");
+		textoManipulacao = (textoManipulacao.replace(",", " ,").replace(".", " .").replace("?", " ?").replace("!", " !")
+				.replace(";", " ;").replace("/", " / ")
 				.replaceAll("\' ", " \'").replace(")", " )")
 				.replace("(", "( "));
-
+		
 		// corrige casos em que há pontos entre as palavras
 		// ex.: i.e
 		Pattern p = Pattern.compile("([a-z]) \\.([a-z])");
@@ -211,18 +222,24 @@ public class ModeloBooleano {
 		// particiona o texto pelo espaço
 		String[] parts = textoManipulacao.split("\\s+");
 
-		textoManipulacao = "";
 		List<String> vocabDocumento = new ArrayList<>();
 		//só adiciona ao vocabulário de um texto, palavras que não estejam no 
 		//stoplist, não seja nenhum dos caracteres de pontuação nem seja número
-		for (String segment : parts) {
-			if (!(stoplist.contains(segment.toLowerCase()) || 
-					segment.equals(",") || segment.equals(".") || 
-					segment.equals("?") || segment.equals("!")
-					|| segment.equals(";") || segment.equals("/")
-					|| segment.equals(")") || segment.equals("(")
-					|| segment.equals("\"") || segment.equals("\'") || segment.matches("\\d{1,9}"))){
-				vocabDocumento.add(segment);
+		for (String segmento : parts) {
+			if (!(stoplist.contains(segmento.toLowerCase()
+					.replace("\"","").replace("\'", "")) || 
+					segmento.equals(",") || segmento.equals(".") || 
+					segmento.equals("?") || segmento.equals("!")
+					|| segmento.equals(";") || segmento.equals("/")
+					|| segmento.equals(")") || segmento.equals("(")
+					|| segmento.equals("\"") || segmento.equals("\'") || segmento.matches("\\d{1,9}"))){
+				
+				if (!vocabDocumento.contains(segmento.toLowerCase()
+						.replace("\"","").replace("\'", ""))){
+					vocabDocumento.add(segmento.toLowerCase()
+							.replace("\"","").replace("\'", ""));
+					System.out.println(segmento.toLowerCase().replace("\"","").replace("\'", ""));
+				}
 			}
 		}
 		vocabularioPorDocumento.put(num, vocabDocumento);
