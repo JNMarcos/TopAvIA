@@ -16,9 +16,9 @@ import org.apache.lucene.store.RAMDirectory;
  *
  */
 public class Consultar {
-	private static String caminhoBase = "..\\BaseDecretos";
-	private static String consulta = "Paulista";
-	private static String modoConsulta = LuceneConstantes.EMENTA;
+	private static String caminhoBase = "..\\BaseDecretosStopWord";
+	private static String consulta = "PAULISTA";
+	private static String modoConsulta = LuceneConstantes.ORD;
     
 	public static void main(String[] args) {
 		BrazilianAnalyzer analisador = new BrazilianAnalyzer();
