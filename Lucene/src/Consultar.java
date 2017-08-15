@@ -16,14 +16,13 @@ import org.apache.lucene.store.RAMDirectory;
  *
  */
 public class Consultar {
-	private static String caminhoBase = "..\\BaseDecretosStopWord";
+	private static String caminhoBase = "..\\BaseDecretosLimpos";
 	private static String consulta = "PAULISTA";
-	private static String modoConsulta = LuceneConstantes.ORD;
+	private static String modoConsulta = LuceneConstantes.CONTEUDO;
     
 	public static void main(String[] args) {
 		BrazilianAnalyzer analisador = new BrazilianAnalyzer();
         Directory diretorio = new RAMDirectory();
-        
         
 	    File f = new File(caminhoBase);
         File[] arquivos = f.listFiles(new FileFilter() {
@@ -34,6 +33,8 @@ public class Consultar {
 		});
         
 		Indexador indexador = new Indexador(arquivos, analisador, diretorio);
+
+		
 		Buscador buscador = new Buscador(consulta, modoConsulta, analisador, diretorio);
 		try {
 			indexador.indexar();

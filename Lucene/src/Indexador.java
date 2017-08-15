@@ -10,6 +10,7 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.RAMDirectory;
 
 
 public class Indexador {
@@ -27,9 +28,10 @@ public class Indexador {
     public void indexar() throws IOException, ParseException {
     	IndexWriterConfig configuracao = new IndexWriterConfig(analisador);
     	IndexWriter w = new IndexWriter(diretorio, configuracao);
+    	
+    	//IndexWriter t = new IndexWriter(diretorio, configuracao);
         
     	Scanner sc;
-
         
     	String texto;
         
@@ -40,48 +42,101 @@ public class Indexador {
         		texto += sc.nextLine();
         	}
         	
+        	String nomeDecreto = arquivos[i].getName().replaceFirst("\\.(txt|html|xml)", "");
+
         	if (texto.contains(">")){
         	String corpoDecreto = "";
-        	if (texto.contains("CORPO>")) corpoDecreto = texto.split("CORPO>")[1];
-        	
-        	String nomeDecreto = arquivos[i].getName().replaceFirst("\\.(txt|html|xml)", "");
-        	
         	String ementaDecreto = "";
         	String consideracoesDecreto = "";
         	String ordenamentoDecreto = "";
         	String atribuicaoDecreto = "";
         	String assinaturasDecreto = "";
         	
-        	if (texto.contains("EM>")) ementaDecreto = texto.split("EM>")[1];
-        	if (texto.contains("CONSS>")) consideracoesDecreto = corpoDecreto.split("CONSS>")[1];
-        	if (texto.contains("ORD>")) ordenamentoDecreto = corpoDecreto.split("ORD")[1];
-        	if (texto.contains("ATRIB>")) atribuicaoDecreto = corpoDecreto.split("ATRIB")[1];
-        	if (texto.contains("ASS>")) assinaturasDecreto = texto.split("ASS>")[1];
         	
-        	addDoc(w, i + "", nomeDecreto, ementaDecreto, consideracoesDecreto,
-        			ordenamentoDecreto, atribuicaoDecreto, assinaturasDecreto);
+        	addDoc(w, LuceneConstantes.DECR, nomeDecreto, texto);
+        	
+        	if (texto.contains("CORPO>")){
+        		corpoDecreto = texto.split("CORPO>")[1];
+        		addDoc(w, LuceneConstantes.CORPO, nomeDecreto, corpoDecreto);
+        	}
+        	
+        	if (texto.contains("EM>")) {
+        		ementaDecreto = texto.split("EM>")[1];
+        		addDoc(w, LuceneConstantes.EMENTA, nomeDecreto, ementaDecreto);
+        	}
+        	if (texto.contains("CONSS>")){
+        		consideracoesDecreto = corpoDecreto.split("CONSS>")[1];
+        		addDoc(w, LuceneConstantes.CONSS, nomeDecreto, consideracoesDecreto);
+        	}
+        	if (texto.contains("ORD>")){
+        		ordenamentoDecreto = corpoDecreto.split("ORD")[1];
+        		addDoc(w, LuceneConstantes.ORD, nomeDecreto, ordenamentoDecreto);
+        	}
+        	if (texto.contains("ATRIB>")){
+        		atribuicaoDecreto = corpoDecreto.split("ATRIB")[1];
+        		addDoc(w, LuceneConstantes.ATRIB, nomeDecreto, atribuicaoDecreto);
+        	}
+        	if (texto.contains("ASS>")){
+        		assinaturasDecreto = texto.split("ASS>")[1];
+        		addDoc(w, LuceneConstantes.ASS, nomeDecreto, assinaturasDecreto);
+        	}
+        	
+       	
+        	/*
+        	//Index Tradicional
+        	if (texto.contains("CORPO>")){
+        		corpoDecreto = texto.split("CORPO>")[1];
+        	}
+        	
+        	if (texto.contains("EM>")) {
+        		ementaDecreto = texto.split("EM>")[1];
+        	}
+        	if (texto.contains("CONSS>")){
+        		consideracoesDecreto = corpoDecreto.split("CONSS>")[1];
+        	}
+        	if (texto.contains("ORD>")){
+        		ordenamentoDecreto = corpoDecreto.split("ORD")[1];
+        	}
+        	if (texto.contains("ATRIB>")){
+        		atribuicaoDecreto = corpoDecreto.split("ATRIB")[1];
+        	}
+        	if (texto.contains("ASS>")){
+        		assinaturasDecreto = texto.split("ASS>")[1];
+        	}
+        	addDocT(w, nomeDecreto, texto, ementaDecreto, consideracoesDecreto,
+        		ordenamentoDecreto, atribuicaoDecreto, assinaturasDecreto);
+        	*/
         	} else {
-        		
+        		addDoc(w, "decreto", nomeDecreto, texto);
         	}
         }
-       
         w.close();
     }
-
     
-    private static void addDoc(IndexWriter w, String titulo, String nome, 
+    private static void addDocT(IndexWriter w, String nome, String decreto, 
     		String ementa, String consideracoes, String ordenamento, 
     		String atribuicao, String assinatura) throws IOException {
         Document doc = new Document();
-        doc.add(new TextField(LuceneConstantes.NOME_CAMINHO, titulo, Field.Store.YES));
         doc.add(new TextField(LuceneConstantes.NOME_ARQUIVO, nome, Field.Store.YES));
         doc.add(new TextField(LuceneConstantes.EMENTA, ementa, Field.Store.YES));
         doc.add(new TextField(LuceneConstantes.CONSS, consideracoes, Field.Store.YES));
         doc.add(new TextField(LuceneConstantes.ORD, ordenamento, Field.Store.YES));
-        doc.add(new TextField(LuceneConstantes.ATRIB, atribuicao, Field.Store.YES));
+        doc.add(new TextField(LuceneConstantes.ATRIB, atribuicao, Field.Store.NO));
         doc.add(new TextField(LuceneConstantes.ASS, assinatura, Field.Store.YES));
-        
+        doc.add(new TextField(LuceneConstantes.TIPO, "decreto", Field.Store.YES));
+        doc.add(new TextField(LuceneConstantes.CONTEUDO, decreto, Field.Store.YES));
         w.addDocument(doc);
+    }
+    
+    
+    private static void addDoc(IndexWriter w, String tipo, String nome, 
+	String conteudo) throws IOException {
+		Document doc = new Document();
+		doc.add(new TextField(LuceneConstantes.TIPO, tipo, Field.Store.YES));
+		doc.add(new TextField(LuceneConstantes.NOME_ARQUIVO, nome, Field.Store.YES));
+		doc.add(new TextField(LuceneConstantes.CONTEUDO, conteudo, Field.Store.YES));
+    
+		w.addDocument(doc);
     }
     
 }
