@@ -54,7 +54,6 @@ public class Indexador {
         	
         	
         	addDoc(w, LuceneConstantes.DECR, nomeDecreto, texto);
-        	
         	if (texto.contains("CORPO>")){
         		corpoDecreto = texto.split("CORPO>")[1];
         		addDoc(w, LuceneConstantes.CORPO, nomeDecreto, corpoDecreto);
@@ -82,8 +81,9 @@ public class Indexador {
         	}
         	
        	
-        	/*
+        	
         	//Index Tradicional
+        	/*
         	if (texto.contains("CORPO>")){
         		corpoDecreto = texto.split("CORPO>")[1];
         	}
@@ -105,9 +105,9 @@ public class Indexador {
         	}
         	addDocT(w, nomeDecreto, texto, ementaDecreto, consideracoesDecreto,
         		ordenamentoDecreto, atribuicaoDecreto, assinaturasDecreto);
-        	*/
+        	 */
         	} else {
-        		addDoc(w, "decreto", nomeDecreto, texto);
+        		addDoc(w, LuceneConstantes.DECR, nomeDecreto, texto);
         	}
         }
         w.close();

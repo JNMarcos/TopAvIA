@@ -10,6 +10,11 @@ public class LuceneConstantes {
 	public static final String TIPO = "tipo";
 	public static final String CONTEUDO = "conteudo";
 	
+	public static final String NOME_ARQUIVO_SAIDA 
+	= "BaseDecretosXMLStop+NãoTradicional.txt";
+	
+	public static final int N_ITERACOES = 5;
+
 	public static final String EMENTA = "ementa";
 	public static final String CONSS = "considerações";
 	public static final String CORPO = "corpo";

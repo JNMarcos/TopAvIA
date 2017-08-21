@@ -1,0 +1,8 @@
+Tipo: nº de doc/tempo em ms
+BaseDecretosXML +Tradicional :  0,06
+BaseDecretosXML+NãoTradicional: 0,12
+BaseDecretosXMLStop +Tradicional 0,05
+BaseDecretosXMLStop+NãoTradicional: 0,10
+BaseDecretosLimposLema+Tradicional: 0,05
+BaseDecretosLimposLemaStop+Tradicional: 0,059
+BaseDecretosLimpos+Tradicional: 0,118

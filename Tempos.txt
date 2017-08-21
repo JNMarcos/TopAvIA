@@ -1,0 +1,8 @@
+Tipo: Tempo em ms
+BaseDecretosLimpos+Tradicional: 152
+BaseDecretosXML+Tradicional :  150
+BaseDecretosXML+NãoTradicional: 187
+BaseDecretosXMLStop+Tradicional 161 
+BaseDecretosXMLStop+NãoTradicional: 173
+BaseDecretosLimposLema+Tradicional: 115
+BaseDecretosLimposLemaStop+Tradicional: 101

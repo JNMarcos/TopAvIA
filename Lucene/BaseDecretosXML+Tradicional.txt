@@ -1,7 +1,8 @@
-9 documentos encontrados.D_40.656_29-04-2014
+9 documentos encontrados.
+D_40.896_15-07-2014
 decreto
 
-D_40.896_15-07-2014
+D_40.656_29-04-2014
 decreto
 
 D_40.726_20-05-2014
@@ -25,3 +26,16 @@ decreto
 D_41.401_29-12-2014
 decreto
 
+
+
+Tempo em ms: 138.0
+
+Tempo em ms: 5.0
+
+Tempo em ms: 5.0
+
+Tempo em ms: 12.0
+
+Tempo em ms: 8.0
+
+Tempo médio em ms: 33.0

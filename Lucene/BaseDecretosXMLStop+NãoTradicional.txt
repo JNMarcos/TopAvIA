@@ -1,4 +1,5 @@
-23 documentos encontrados.D_40.656_29-04-2014
+23 documentos encontrados.
+D_40.656_29-04-2014
 ementa
 
 D_40.656_29-04-2014
@@ -67,3 +68,16 @@ decreto
 D_41.401_29-12-2014
 decreto
 
+
+
+Tempo em ms: 184.0
+
+Tempo em ms: 3.0
+
+Tempo em ms: 2.0
+
+Tempo em ms: 3.0
+
+Tempo em ms: 7.0
+
+Tempo médio em ms: 39.0
