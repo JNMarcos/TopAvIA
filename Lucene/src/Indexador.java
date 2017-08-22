@@ -10,7 +10,6 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.RAMDirectory;
 
 
 public class Indexador {
@@ -28,9 +27,7 @@ public class Indexador {
     public void indexar() throws IOException, ParseException {
     	IndexWriterConfig configuracao = new IndexWriterConfig(analisador);
     	IndexWriter w = new IndexWriter(diretorio, configuracao);
-    	
-    	//IndexWriter t = new IndexWriter(diretorio, configuracao);
-        
+    	        
     	Scanner sc;
         
     	String texto;
@@ -45,72 +42,90 @@ public class Indexador {
         	String nomeDecreto = arquivos[i].getName().replaceFirst("\\.(txt|html|xml)", "");
 
         	if (texto.contains(">")){
-        	String corpoDecreto = "";
-        	String ementaDecreto = "";
-        	String consideracoesDecreto = "";
-        	String ordenamentoDecreto = "";
-        	String atribuicaoDecreto = "";
-        	String assinaturasDecreto = "";
-        	
-        	
-        	addDoc(w, LuceneConstantes.DECR, nomeDecreto, texto);
-        	if (texto.contains("CORPO>")){
-        		corpoDecreto = texto.split("CORPO>")[1];
-        		addDoc(w, LuceneConstantes.CORPO, nomeDecreto, corpoDecreto);
-        	}
-        	
-        	if (texto.contains("EM>")) {
-        		ementaDecreto = texto.split("EM>")[1];
-        		addDoc(w, LuceneConstantes.EMENTA, nomeDecreto, ementaDecreto);
-        	}
-        	if (texto.contains("CONSS>")){
-        		consideracoesDecreto = corpoDecreto.split("CONSS>")[1];
-        		addDoc(w, LuceneConstantes.CONSS, nomeDecreto, consideracoesDecreto);
-        	}
-        	if (texto.contains("ORD>")){
-        		ordenamentoDecreto = corpoDecreto.split("ORD")[1];
-        		addDoc(w, LuceneConstantes.ORD, nomeDecreto, ordenamentoDecreto);
-        	}
-        	if (texto.contains("ATRIB>")){
-        		atribuicaoDecreto = corpoDecreto.split("ATRIB")[1];
-        		addDoc(w, LuceneConstantes.ATRIB, nomeDecreto, atribuicaoDecreto);
-        	}
-        	if (texto.contains("ASS>")){
-        		assinaturasDecreto = texto.split("ASS>")[1];
-        		addDoc(w, LuceneConstantes.ASS, nomeDecreto, assinaturasDecreto);
-        	}
-        	
-       	
-        	
-        	//Index Tradicional
-        	/*
-        	if (texto.contains("CORPO>")){
-        		corpoDecreto = texto.split("CORPO>")[1];
-        	}
-        	
-        	if (texto.contains("EM>")) {
-        		ementaDecreto = texto.split("EM>")[1];
-        	}
-        	if (texto.contains("CONSS>")){
-        		consideracoesDecreto = corpoDecreto.split("CONSS>")[1];
-        	}
-        	if (texto.contains("ORD>")){
-        		ordenamentoDecreto = corpoDecreto.split("ORD")[1];
-        	}
-        	if (texto.contains("ATRIB>")){
-        		atribuicaoDecreto = corpoDecreto.split("ATRIB")[1];
-        	}
-        	if (texto.contains("ASS>")){
-        		assinaturasDecreto = texto.split("ASS>")[1];
-        	}
-        	addDocT(w, nomeDecreto, texto, ementaDecreto, consideracoesDecreto,
-        		ordenamentoDecreto, atribuicaoDecreto, assinaturasDecreto);
-        	 */
+        		indexarNaoTradicional(texto, nomeDecreto, w);
+        		//indexarTradicional(texto, nomeDecreto, w);
         	} else {
         		addDoc(w, LuceneConstantes.DECR, nomeDecreto, texto);
         	}
         }
         w.close();
+    }
+    
+    private static void indexarNaoTradicional(String texto, String nomeDecreto, IndexWriter w){
+    	String corpoDecreto = "";
+    	String ementaDecreto = "";
+    	String consideracoesDecreto = "";
+    	String ordenamentoDecreto = "";
+    	String atribuicaoDecreto = "";
+    	String assinaturasDecreto = "";
+
+    	try {
+			addDoc(w, LuceneConstantes.DECR, nomeDecreto, texto);
+			
+			if (texto.contains("CORPO>")){
+	    		corpoDecreto = texto.split("CORPO>")[1];
+	    		addDoc(w, LuceneConstantes.CORPO, nomeDecreto, corpoDecreto);
+	    	}
+	    	
+	    	if (texto.contains("EM>")) {
+	    		ementaDecreto = texto.split("EM>")[1];
+	    		addDoc(w, LuceneConstantes.EMENTA, nomeDecreto, ementaDecreto);
+	    	}
+	    	if (texto.contains("CONSS>")){
+	    		consideracoesDecreto = corpoDecreto.split("CONSS>")[1];
+	    		addDoc(w, LuceneConstantes.CONSS, nomeDecreto, consideracoesDecreto);
+	    	}
+	    	if (texto.contains("ORD>")){
+	    		ordenamentoDecreto = corpoDecreto.split("ORD")[1];
+	    		addDoc(w, LuceneConstantes.ORD, nomeDecreto, ordenamentoDecreto);
+	    	}
+	    	if (texto.contains("ATRIB>")){
+	    		atribuicaoDecreto = corpoDecreto.split("ATRIB")[1];
+	    		addDoc(w, LuceneConstantes.ATRIB, nomeDecreto, atribuicaoDecreto);
+	    	}
+	    	if (texto.contains("ASS>")){
+	    		assinaturasDecreto = texto.split("ASS>")[1];
+	    		addDoc(w, LuceneConstantes.ASS, nomeDecreto, assinaturasDecreto);
+	    	}			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	
+    }
+    
+    private static void indexarTradicional(String texto, String nomeDecreto, IndexWriter w){
+    	String corpoDecreto = "";
+    	String ementaDecreto = "";
+    	String consideracoesDecreto = "";
+    	String ordenamentoDecreto = "";
+    	String atribuicaoDecreto = "";
+    	String assinaturasDecreto = "";
+    	
+    	if (texto.contains("CORPO>")){
+    		corpoDecreto = texto.split("CORPO>")[1];
+    	}
+    	
+    	if (texto.contains("EM>")) {
+    		ementaDecreto = texto.split("EM>")[1];
+    	}
+    	if (texto.contains("CONSS>")){
+    		consideracoesDecreto = corpoDecreto.split("CONSS>")[1];
+    	}
+    	if (texto.contains("ORD>")){
+    		ordenamentoDecreto = corpoDecreto.split("ORD")[1];
+    	}
+    	if (texto.contains("ATRIB>")){
+    		atribuicaoDecreto = corpoDecreto.split("ATRIB")[1];
+    	}
+    	if (texto.contains("ASS>")){
+    		assinaturasDecreto = texto.split("ASS>")[1];
+    	}
+    	try {
+			addDocT(w, nomeDecreto, texto, ementaDecreto, consideracoesDecreto,
+				ordenamentoDecreto, atribuicaoDecreto, assinaturasDecreto);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
     
     private static void addDocT(IndexWriter w, String nome, String decreto, 

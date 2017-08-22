@@ -16,7 +16,7 @@ import org.apache.lucene.store.RAMDirectory;
  *
  */
 public class Consultar {
-	private static String caminhoBase = "..\\BaseDecretosStopWord";
+	private static String caminhoBase = "..\\BaseDecretosStop";
 	private static String consulta = "PAULISTA";
 	private static String modoConsulta = LuceneConstantes.CONTEUDO;
     
