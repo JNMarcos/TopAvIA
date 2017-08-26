@@ -70,14 +70,14 @@ decreto
 
 
 
-Tempo em ms: 184.0
+Tempo em ms: 133.0
 
 Tempo em ms: 3.0
 
-Tempo em ms: 2.0
+Tempo em ms: 4.0
 
 Tempo em ms: 3.0
 
-Tempo em ms: 7.0
+Tempo em ms: 3.0
 
-Tempo médio em ms: 39.0
+Tempo médio em ms: 29.0
